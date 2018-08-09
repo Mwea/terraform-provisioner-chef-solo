@@ -44,10 +44,6 @@ ENV['no_proxy'] = "{{ join .NOProxy "," }}"
 ssl_verify_mode  {{ .SSLVerifyMode }}
 {{- end -}}
 
-{{ if .DisableReporting }}
-enable_reporting false
-{{ end -}}
-
 {{ if .ClientOptions }}
 {{ join .ClientOptions "\n" }}
 {{ end }}
