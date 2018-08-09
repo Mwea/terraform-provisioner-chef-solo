@@ -23,6 +23,7 @@ before_deploy:
 branches:
   only:
   - master
+  - test
 matrix:
   fast_finish: true
   allow_failures:
@@ -37,4 +38,3 @@ deploy:
   file_glob: true
   on:
     repo: Mwea/terraform-provisioner-chef-solo
-    tags: true
