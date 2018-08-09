@@ -11,10 +11,8 @@ install:
 script:
 - export VERSION=$(echo $TRAVIS_TAG | sed 's/^v//' )
 - export PRERELEASE=$(echo $VERSION | cut -d '-' -f 2)
-- sed -i "s/VersionPrerelease = \".*\"/VersionPrerelease = \"$PRERELEASE\"/" version/version.go
 - make fmt
 - make test
-- make e2etest
 - make bin
 
 before_deploy:
@@ -39,3 +37,4 @@ deploy:
   file_glob: true
   on:
     repo: Mwea/terraform-provisioner-chef-solo
+    tags: true
