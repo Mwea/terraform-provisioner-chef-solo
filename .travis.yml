@@ -12,7 +12,7 @@ script:
 - export VERSION=$(echo $TRAVIS_TAG | sed 's/^v//' )
 - export PRERELEASE=$(echo $VERSION | cut -d '-' -f 2)
 - make fmt
-- make test
+- timeout=60000 make test
 - make bin
 
 before_deploy:
