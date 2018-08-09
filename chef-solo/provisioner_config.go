@@ -225,7 +225,7 @@ func configureProvisioner(d *schema.ResourceData, osType afero.Fs) (*provisioner
 	if _, err := p.os.Stat(outputDir); err == nil {
 		p.os.RemoveAll(outputDir)
 	}
-	if err := p.os.MkdirAll(outputDir, 0755); err != nil {
+	if err := p.os.MkdirAll(outputDir, 0766); err != nil {
 		return nil, fmt.Errorf("error creating output directory %s: %v", outputDir, err)
 	}
 	p.OutputDir = outputDir

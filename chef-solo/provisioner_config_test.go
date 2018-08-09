@@ -52,8 +52,8 @@ func TestResourceProvider_DecodeConfig(t *testing.T) {
 	}
 	for k, tc := range cases {
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		_, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,

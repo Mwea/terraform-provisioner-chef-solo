@@ -28,7 +28,7 @@ func (p *provisioner) renderChefData(ctx context.Context, o terraform.UIOutput) 
 			fileLock.Unlock()
 			return err
 		}
-		if err := p.buildNodeFiles(o); err != nil {
+		if _, err := p.buildNodeFiles(o); err != nil {
 			fileLock.Unlock()
 			return err
 		}
@@ -38,7 +38,7 @@ func (p *provisioner) renderChefData(ctx context.Context, o terraform.UIOutput) 
 	} else {
 		_, err := p.os.Stat(path.Join(p.OutputDir, "bundle-done"))
 		ttw := 2 * time.Second
-		for (os.IsNotExist(err) || err != nil) && ttw < 5*time.Second {
+		for (os.IsNotExist(err) || err != nil) && ttw < 40*time.Second {
 			time.Sleep(ttw)
 			ttw *= 2
 			_, err = p.os.Stat(path.Join(p.OutputDir, "bundle-done"))
@@ -80,7 +80,7 @@ func (p *provisioner) bundleChef(ctx context.Context, o terraform.UIOutput) erro
 }
 
 func (p *provisioner) buildDna(o terraform.UIOutput) error {
-	if err := p.os.MkdirAll(filepath.Join(p.OutputDir, "dna"), 0755); err != nil {
+	if err := p.os.MkdirAll(filepath.Join(p.OutputDir, "dna"), 0766); err != nil {
 		return fmt.Errorf("error creating dna directory for output dir: %v", err)
 	}
 	tmp := make(map[string]interface{})
@@ -93,23 +93,26 @@ func (p *provisioner) buildDna(o terraform.UIOutput) error {
 	return nil
 }
 
-func (p *provisioner) buildNodeFiles(o terraform.UIOutput) error {
-	if err := p.os.MkdirAll(filepath.Join(p.OutputDir, "nodes"), 0755); err != nil {
-		return fmt.Errorf("error creating node directory for output dir: %v", err)
+func (p *provisioner) buildNodeFiles(o terraform.UIOutput) (*flock.Flock, error) {
+	if err := p.os.MkdirAll(filepath.Join(p.OutputDir, "nodes"), 0766); err != nil {
+		return nil, fmt.Errorf("error creating node directory for output dir: %v", err)
 	}
-	lockedNode, err := flock.NewFlock(path.Join(p.OutputDir, "nodes", "nodes.lock")).TryLock()
+	lock := flock.NewFlock(path.Join(p.OutputDir, "nodes", "nodes.lock"))
+	lockedNode, err := lock.TryLock()
 	if lockedNode && err == nil {
 		for _, node := range p.Nodes {
 			tmp := make(map[string]interface{})
 			if err := json.Unmarshal([]byte(node.(string)), &tmp); err != nil {
-				return fmt.Errorf("error unable to render json %s: %v", node, err)
+				lock.Unlock()
+				return lock, fmt.Errorf("error unable to render json %s: %v", node, err)
 			}
 			if err := p.bumpFile(path.Join(p.OutputDir, "nodes", tmp["id"].(string)+".json"), node.(string), o); err != nil {
-				return err
+				lock.Unlock()
+				return lock, err
 			}
 		}
 	}
-	return nil
+	return lock, nil
 }
 
 func (p *provisioner) bumpFile(filePath string, data string, o terraform.UIOutput) error {

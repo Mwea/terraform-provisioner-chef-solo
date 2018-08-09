@@ -11,6 +11,7 @@ import (
 	"github.com/theckman/go-flock"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 )
 
 func TestResourceProvider_buildNodeFiles(t *testing.T) {
@@ -83,53 +84,65 @@ func TestResourceProvider_buildNodeFiles(t *testing.T) {
 			FilesProduced: []string{},
 		},
 	}
+	os := afero.NewOsFs()
 
 	o := new(terraform.MockUIOutput)
 	for k, tc := range cases {
-		os := afero.NewOsFs()
-		os.RemoveAll("/tmp/tf")
-		os.MkdirAll("/tmp/tf/input", 755)
-		os.MkdirAll("/tmp/tf/output", 755)
-		var lock *flock.Flock
 
-		if tc.NodeDirExist {
-			os.MkdirAll("/tmp/tf/output/nodes", 755)
-			os.Create("/tmp/tf/output/nodes/popo.json")
-			if tc.Locked {
-				lock = flock.NewFlock(path.Join("/tmp/tf", "output", "nodes", "nodes.lock"))
-				lock.TryLock()
-			}
+		dir, err := ioutil.TempDir("", "tf-test")
+
+		tc.Config["chef_module_path"] = filepath.Join(dir,tc.Config["chef_module_path"].(string))
+		tc.Config["output_dir"] = filepath.Join(dir,tc.Config["output_dir"].(string))
+
+		if err := os.RemoveAll(dir) ; err != nil {
+			t.Fatalf("Failed to remove directory, %v", err)
 		}
+		os.MkdirAll(filepath.Join(dir, "/tmp/tf/input"), 0777)
+		os.MkdirAll(filepath.Join(dir, "/tmp/tf/output"), 0777)
+		var lock *flock.Flock
 
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
 		)
+
+		if tc.NodeDirExist {
+			os.MkdirAll(filepath.Join(dir, "/tmp/tf/output/nodes"), 0777)
+			os.Create(filepath.Join(dir, "/tmp/tf/output/nodes/popo.json"))
+			if tc.Locked {
+				lock = flock.NewFlock(path.Join(dir,"/tmp/tf", "output", "nodes", "nodes.lock"))
+				lock.TryLock()
+			}
+		}
+
 		if err != nil {
 			t.Fatalf("Error: %v", err)
 		}
-		err = p.buildNodeFiles(o)
+		if !tc.Locked {
+			lock, err = p.buildNodeFiles(o)
+		}
+
+		lock.Unlock()
 		if (tc.Error == false && err != nil) || (tc.Error == true && err == nil) {
-			os.RemoveAll("/tmp/tf")
+			os.RemoveAll(dir)
 			t.Fatalf("Test %q failed: %v", k, err)
 		}
 
 		if tc.NodeDirExist {
-			tc.FilesProduced = append(tc.FilesProduced, "/tmp/tf/output/nodes/toto.json")
+			tc.FilesProduced = append(tc.FilesProduced, "/tmp/tf/output/nodes/popo.json")
 			tc.FilesProduced = append(tc.FilesProduced, "/tmp/tf/output/nodes/nodes.lock")
-			files, err := ioutil.ReadDir("/tmp/tf/output/nodes/")
+			files, err := ioutil.ReadDir(filepath.Join(dir, "/tmp/tf/output/nodes/"))
 			if err != nil {
 				log.Fatal(err)
 			}
 
 			for _, f := range files {
 				if !contains(tc.FilesProduced, "/tmp/tf/output/nodes/"+f.Name()) {
-					os.RemoveAll("/tmp/tf")
+					os.RemoveAll(dir)
 					t.Fatalf("Test %q failed: file is missing %s", k, f.Name())
 				}
 			}
 		}
-		os.RemoveAll("/tmp/tf")
 	}
 }
 
@@ -175,8 +188,8 @@ func TestResourceProvider_renderChefData(t *testing.T) {
 	for k, tc := range cases {
 		os := afero.NewOsFs()
 		os.RemoveAll("/tmp/tf")
-		os.MkdirAll("/tmp/tf/input", 755)
-		os.MkdirAll("/tmp/tf/output", 755)
+		os.MkdirAll("/tmp/tf/input", 766)
+		os.MkdirAll("/tmp/tf/output", 766)
 
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),

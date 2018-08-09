@@ -64,8 +64,8 @@ func TestResourceProvider_preUploadDirectory(t *testing.T) {
 	for k, tc := range cases {
 		c.Commands = tc.Commands
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
@@ -125,8 +125,8 @@ func TestResourceProvider_postUploadDirectory(t *testing.T) {
 	for k, tc := range cases {
 		c.Commands = tc.Commands
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
@@ -208,8 +208,8 @@ func TestResourceProvider_uploadConfigFiles(t *testing.T) {
 		c.Uploads = tc.Uploads
 		c.UploadDirs = tc.UploadDirs
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
@@ -287,8 +287,8 @@ func TestResourceProvider_installChefAsService(t *testing.T) {
 		c.Commands = tc.Commands
 		c.Uploads = tc.Uploads
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
@@ -440,8 +440,8 @@ func TestResourceProvider_linuxInstallChefClient(t *testing.T) {
 		c.Commands = tc.Commands
 
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,

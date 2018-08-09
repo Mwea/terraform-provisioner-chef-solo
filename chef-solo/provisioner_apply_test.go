@@ -137,8 +137,8 @@ func TestResourceProvider_runChefClient(t *testing.T) {
 		c.Commands = tc.Commands
 
 		os := afero.NewMemMapFs()
-		os.MkdirAll("/input", 755)
-		os.MkdirAll("/output", 755)
+		os.MkdirAll("/input", 766)
+		os.MkdirAll("/output", 766)
 		p, err := configureProvisioner(
 			schema.TestResourceDataRaw(t, Provisioner().(*schema.Provisioner).Schema, tc.Config),
 			os,
