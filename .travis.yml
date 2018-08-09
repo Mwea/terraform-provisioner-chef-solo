@@ -9,7 +9,7 @@ install:
 - bash scripts/gogetcookie.sh
 - go get github.com/kardianos/govendor
 script:
-- export VERSION=$(echo $TRAVIS_TAG | sed 's/^v//' )
+- export VERSION=0.1
 - export PRERELEASE=$(echo $VERSION | cut -d '-' -f 2)
 - make fmt
 - timeout=60000 make test
