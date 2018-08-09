@@ -1,0 +1,41 @@
+dist: trusty
+sudo: required
+services:
+- docker
+language: go
+go:
+- 1.8.1
+install:
+- bash scripts/gogetcookie.sh
+- go get github.com/kardianos/govendor
+script:
+- export VERSION=$(echo $TRAVIS_TAG | sed 's/^v//' )
+- export PRERELEASE=$(echo $VERSION | cut -d '-' -f 2)
+- sed -i "s/VersionPrerelease = \".*\"/VersionPrerelease = \"$PRERELEASE\"/" version/version.go
+- make fmt
+- make test
+- make e2etest
+- make bin
+
+before_deploy:
+- echo "Deploying $VERSION(-$PRERELEASE) to GitHub releases"
+- for d in $(find ./pkg -type d -maxdepth 1 -mindepth 1 | cut -d '/' -f3); do zip
+  -j terraform-provisioner-chef-solo_v${VERSION}_${d}.zip ./pkg/${d}/terraform* ;
+  done
+branches:
+  only:
+  - master
+matrix:
+  fast_finish: true
+  allow_failures:
+  - go: tip
+
+deploy:
+  provider: releases
+  api_key:
+    secure: dY4jJUIWGfo220yCc3wYpCf+Cv8Gpk9qNIzKVljVFnUq8OmR6OEYy3M5JPlNlCj4f6D1AnnY6Yqs7u096Bmq8DI77NkjdK7bssyOvA+HC2NT6bczIp5OKf0DQw8WcIKO+pJsagENIrQpS3+lpqMepcimc1KHH2oYQT9FynoqFUPncDVCK+6Gl7a2gnP590dIz33hl1f4TzMyf953GsmYflCvYMzKFzwAt2yQl4G32HaeCpJJKaEk0jtOvuqWBjPTvkq710UZXsLwO4VS1RDW8Cwv2vYcAd3WD8a0HzUBL6+EYXP34Ed+LYc7tMmJgXJhzUNCul+916C0K0QrlxA5lrvRn471sfKakTFOPWDuVMDSeY9glznmVMQYW6wrxscU3flHr0tUEg9goR8f/IzgsgKUlq1lB731+HnlwS2K6lMUjJZvAgoEqXSmV2+x8rWejFX0dfnqQtnZK+cR71G2cJXqBsIsn0TqSDiyBAzK5qtyPIvUyCI0JC1lycNsaEnT/ae/pe6NFAGbYYM2jsZzw/cRXA8L7mLw+DLPWGC6yXWrc28nU3sITPwN74x1M0SHPPa4+mMNDdic7eS93gqOxWVDAyD9DDmkLdViqEIJhLCDE60Bc4+ulZTt0UO4ERN/gvtkeuQIQ13676Vx2zbKJqL7Nk7bXE4zNE/nSaIfXis=
+  file: terraform-*.zip
+  skip_cleanup: true
+  file_glob: true
+  on:
+    repo: Mwea/terraform-provisioner-chef-solo
