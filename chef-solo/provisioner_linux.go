@@ -148,7 +148,7 @@ func (p *provisioner) linuxInstallChefAsAService(o terraform.UIOutput, comm comm
 	}
 
 	if err := p.runMultipleCommands(o, comm, []string{
-		fmt.Sprintf(chmod, service, 766),
+		fmt.Sprintf(chmod, service, 755),
 		fmt.Sprintf("mv %s %s", service, path.Join(servicePath, serviceName)),
 		reloadDeamon,
 		fmt.Sprintf(enableService, serviceName),
