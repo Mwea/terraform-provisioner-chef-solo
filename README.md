@@ -34,3 +34,58 @@ provisioner "chef-solo" {
 ```
 
 Other options will soon be documented too.
+
+Example of usage with terraform provider chef solo : 
+
+```
+
+data "template_chef_solo" "consul_server" {
+
+  count = "${length(var.instances_ips)}"
+
+  automatic_attributes = "${file("${path.module}/attributes/master.tpl")}"
+  node_id         = "${element(var.instances_hostnames, count.index)}"
+  policy_name     = "consul_server"
+  policy_group    = "local"
+  environment     = "preprod"
+
+  vars {
+    node_ip     = "${element(var.instances_ips, count.index)}"
+    node_id     = "${element(var.instances_hostnames, count.index)}"
+    hosts       = "${jsonencode(zipmap(
+                        var.instances_ips,
+                        var.instances_hostnames)
+                    )}"
+  }
+}
+
+resource "null_resource" "provision_consul" {
+
+  triggers {
+    always = "${uuid()}"
+  }
+
+  count = "${length(var.instances_ips)}"
+
+  connection {
+    user        = "centos"
+    private_key = "${file(var.ssh_key)}"
+    host        = "${element(var.instances_ips, count.index)}"
+  }
+
+  provisioner "chef-solo" {
+
+    use_sudo         = true
+    nodes            = ["${data.template_chef_solo.consul_server.*.node}"]
+    target_node      = "${element(data.template_chef_solo.consul_server.*.dna, count.index)}"
+    environment      = "${element(data.template_chef_solo.consul_server.*.environment, count.index)}"
+    use_policyfile   = "${element(data.template_chef_solo.consul_server.*.use_policyfile, count.index)}"
+    instance_id      = "${element(data.template_chef_solo.consul_server.*.node_id, count.index)}"
+
+    chef_module_path = "${path.module}/../.."
+    output_dir       = "${path.module}/bump-chef"
+    version          = "12.18.31"
+
+  }
+}
+```
