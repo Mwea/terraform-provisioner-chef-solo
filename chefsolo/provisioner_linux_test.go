@@ -1,4 +1,4 @@
-package chef_solo
+package chefsolo
 
 import (
 	"path"

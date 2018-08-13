@@ -4,6 +4,8 @@
 
 # Get the parent directory of where this script is.
 SOURCE="${BASH_SOURCE[0]}"
+VERSION=$1
+
 while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
 DIR="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
 
@@ -61,7 +63,7 @@ gox \
 GOPATH=${GOPATH:-$(go env GOPATH)}
 case $(uname) in
     CYGWIN*)
-        GOPATH="$(cygpath $GOPATH)"
+        GOPATH="$(cygpath $GOPATH)"/home/tchary/Downloads/terraform-provisioner-chefsolo_v0.1_linux_amd64/terraform-provisioner-chefsolo
         ;;
 esac
 OLDIFS=$IFS

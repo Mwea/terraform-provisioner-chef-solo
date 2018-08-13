@@ -9,7 +9,7 @@ build: fmtcheck
 
 
 bin: fmtcheck
-	sh -c "'$(CURDIR)/scripts/build.sh'"
+	sh -c "'$(CURDIR)/scripts/build.sh' $$VERSION"
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1

@@ -9,7 +9,7 @@ install:
 - bash scripts/gogetcookie.sh
 - go get github.com/kardianos/govendor
 script:
-- export VERSION=0.1
+- export VERSION=v0.2
 - export PRERELEASE=$(echo $VERSION | cut -d '-' -f 2)
 - make fmt
 - timeout=60000 make test
@@ -17,7 +17,7 @@ script:
 
 before_deploy:
 - echo "Deploying $VERSION(-$PRERELEASE) to GitHub releases"
-- for d in $(find ./pkg -type d -maxdepth 1 -mindepth 1 | cut -d '/' -f3); do zip -j terraform-provisioner-chef-solo_v${VERSION}_${d}.zip ./pkg/${d}/terraform* ; done
+- for d in $(find ./pkg -type d -maxdepth 1 -mindepth 1 | cut -d '/' -f3); do zip -j terraform-provisioner-chefsolo_${VERSION}_${d}.zip ./pkg/${d}/terraform* ; done
 branches:
   only:
   - master
@@ -35,4 +35,4 @@ deploy:
   skip_cleanup: true
   file_glob: true
   on:
-    repo: Mwea/terraform-provisioner-chef-solo
+    repo: Mwea/terraform-provisioner-chefsolo

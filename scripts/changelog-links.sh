@@ -24,7 +24,7 @@ else
   SED="sed -i.bak -r -e"
 fi
 
-PROVISIONER_URL="https:\/\/github.com\/criteo\/terraform-provisioner-chef-solo\/issues"
+PROVISIONER_URL="https:\/\/github.com\/criteo\/terraform-provisioner-chefsolo\/issues"
 
 $SED "s/GH-([0-9]+)/\[#\1\]\($PROVISIONER_URL\/\1\)/g" -e 's/\[\[#(.+)([0-9])\)]$/(\[#\1\2))/g' CHANGELOG.md
 

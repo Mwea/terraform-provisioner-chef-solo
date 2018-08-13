@@ -1,4 +1,4 @@
-package chef_solo
+package chefsolo
 
 import (
 	"path"
@@ -91,10 +91,10 @@ func TestResourceProvider_buildNodeFiles(t *testing.T) {
 
 		dir, err := ioutil.TempDir("", "tf-test")
 
-		tc.Config["chef_module_path"] = filepath.Join(dir,tc.Config["chef_module_path"].(string))
-		tc.Config["output_dir"] = filepath.Join(dir,tc.Config["output_dir"].(string))
+		tc.Config["chef_module_path"] = filepath.Join(dir, tc.Config["chef_module_path"].(string))
+		tc.Config["output_dir"] = filepath.Join(dir, tc.Config["output_dir"].(string))
 
-		if err := os.RemoveAll(dir) ; err != nil {
+		if err := os.RemoveAll(dir); err != nil {
 			t.Fatalf("Failed to remove directory, %v", err)
 		}
 		os.MkdirAll(filepath.Join(dir, "/tmp/tf/input"), 0777)
@@ -110,7 +110,7 @@ func TestResourceProvider_buildNodeFiles(t *testing.T) {
 			os.MkdirAll(filepath.Join(dir, "/tmp/tf/output/nodes"), 0777)
 			os.Create(filepath.Join(dir, "/tmp/tf/output/nodes/popo.json"))
 			if tc.Locked {
-				lock = flock.NewFlock(path.Join(dir,"/tmp/tf", "output", "nodes", "nodes.lock"))
+				lock = flock.NewFlock(path.Join(dir, "/tmp/tf", "output", "nodes", "nodes.lock"))
 				lock.TryLock()
 			}
 		}
@@ -199,7 +199,7 @@ func TestResourceProvider_renderChefData(t *testing.T) {
 			t.Fatalf("Error: %v", err)
 		}
 		if tc.Locked {
-			flock.NewFlock(path.Join("/tmp/tf", "output", "chef-solo.lock")).TryLock()
+			flock.NewFlock(path.Join("/tmp/tf", "output", "chefsolo.lock")).TryLock()
 		}
 		if tc.BundleEnd {
 			os.Create(path.Join("/tmp/tf", "output", "bundle-done"))

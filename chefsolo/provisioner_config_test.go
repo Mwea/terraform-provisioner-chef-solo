@@ -1,4 +1,4 @@
-package chef_solo
+package chefsolo
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"

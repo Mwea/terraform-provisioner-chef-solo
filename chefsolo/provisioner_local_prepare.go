@@ -1,4 +1,4 @@
-package chef_solo
+package chefsolo
 
 import (
 	"context"
@@ -22,7 +22,7 @@ func (p *provisioner) prepareConfigFiles(ctx context.Context, o terraform.UIOutp
 }
 
 func (p *provisioner) renderChefData(ctx context.Context, o terraform.UIOutput) error {
-	fileLock := flock.NewFlock(path.Join(p.OutputDir, "chef-solo.lock"))
+	fileLock := flock.NewFlock(path.Join(p.OutputDir, "chefsolo.lock"))
 	if locked, err := fileLock.TryLock(); err == nil && locked {
 		if err := p.bundleChef(ctx, o); err != nil {
 			fileLock.Unlock()
