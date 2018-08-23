@@ -478,7 +478,7 @@ After = network.target auditd.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/chef/0/output
-ExecStart=/opt/chef/embedded/bin/ruby --disable-gems /usr/bin/chef-client -z -c /opt/chef/0/client.rb -j "/opt/chef/0/output/dna/toto.json" -E "_default"
+ExecStart=/opt/chef/embedded/bin/ruby /usr/bin/chef-client -z -c /opt/chef/0/client.rb -j "/opt/chef/0/output/dna/toto.json" -E "_default"
 ExecReload = /bin/kill -HUP $MAINPID
 SuccessExitStatus = 3
 Restart = on-failure
