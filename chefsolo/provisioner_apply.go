@@ -14,7 +14,7 @@ const (
 	clienrb        = "client.rb"
 	defaultEnv     = "_default"
 	logfileDir     = "logfiles"
-	linuxChefCmd   = "/opt/chef/embedded/bin/ruby /usr/bin/chef-client"
+	linuxChefCmd   = "/usr/bin/chef-client"
 	linuxConfDir   = "/opt/chef/0"
 	windowsChefCmd = "cmd /c chef-client"
 	windowsConfDir = "C:/chef"
