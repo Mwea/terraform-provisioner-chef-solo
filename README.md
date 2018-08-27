@@ -39,7 +39,7 @@ Example of usage with terraform provider chef solo :
 
 ```
 
-data "template_chef_solo" "consul_server" {
+data "template_chefsolo" "consul_server" {
 
   count = "${length(var.instances_ips)}"
 
@@ -73,14 +73,14 @@ resource "null_resource" "provision_consul" {
     host        = "${element(var.instances_ips, count.index)}"
   }
 
-  provisioner "chef-solo" {
+  provisioner "chefsolo" {
 
     use_sudo         = true
-    nodes            = ["${data.template_chef_solo.consul_server.*.node}"]
-    target_node      = "${element(data.template_chef_solo.consul_server.*.dna, count.index)}"
-    environment      = "${element(data.template_chef_solo.consul_server.*.environment, count.index)}"
-    use_policyfile   = "${element(data.template_chef_solo.consul_server.*.use_policyfile, count.index)}"
-    instance_id      = "${element(data.template_chef_solo.consul_server.*.node_id, count.index)}"
+    nodes            = ["${data.template_chefsolo.consul_server.*.node}"]
+    target_node      = "${element(data.template_chefsolo.consul_server.*.dna, count.index)}"
+    environment      = "${element(data.template_chefsolo.consul_server.*.environment, count.index)}"
+    use_policyfile   = "${element(data.template_chefsolo.consul_server.*.use_policyfile, count.index)}"
+    instance_id      = "${element(data.template_chefsolo.consul_server.*.node_id, count.index)}"
 
     chef_module_path = "${path.module}/../.."
     output_dir       = "${path.module}/bump-chef"
