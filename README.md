@@ -23,7 +23,7 @@ Required attributes for using chefsolo provisioner are :
 
 A very minimal configuration would be :
 
-```
+```hcl
 provisioner "chefsolo" {
     "chef_module_path": "path/to/my/cookbook"
     "output_dir": "/tmp/output_tf"
@@ -37,7 +37,7 @@ Other options will soon be documented too.
 
 Example of usage with terraform provider chef solo : 
 
-```
+```hcl
 
 data "template_chefsolo" "consul_server" {
 
