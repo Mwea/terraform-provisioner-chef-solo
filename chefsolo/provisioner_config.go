@@ -115,9 +115,10 @@ func Provisioner() terraform.ResourceProvisioner {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"recreate_client": {
+			"skip_install": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  false,
 			},
 			"prevent_sudo": {
 				Type:     schema.TypeBool,
@@ -178,6 +179,7 @@ func configureProvisioner(d *schema.ResourceData, osType afero.Fs) (*provisioner
 		ClientOptions:    getStringList(d.Get("client_options")),
 		Environment:      d.Get("environment").(string),
 		UsePolicyfile:    d.Get("use_policyfile").(bool),
+		SkipInstall:      d.Get("skip_install").(bool),
 		HTTPProxy:        d.Get("http_proxy").(string),
 		HTTPSProxy:       d.Get("https_proxy").(string),
 		NOProxy:          getStringList(d.Get("no_proxy")),

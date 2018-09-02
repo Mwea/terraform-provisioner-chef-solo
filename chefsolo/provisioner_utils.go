@@ -42,6 +42,12 @@ func getCommunicator(ctx context.Context, o terraform.UIOutput, s *terraform.Ins
 	if err != nil {
 		return nil, err
 	}
-	defer comm.Disconnect()
+
+	// Wait for the context to end and then disconnect
+	go func() {
+		<-ctx.Done()
+		comm.Disconnect()
+	}()
+
 	return comm, err
 }
