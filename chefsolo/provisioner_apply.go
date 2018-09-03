@@ -55,7 +55,6 @@ cookbook_path '{{ .DefaultConfDir }}/{{ .BaseOutputDir }}/cookbooks'
 node_path '{{ .DefaultConfDir }}/{{ .BaseOutputDir }}/nodes'
 role_path '{{ .DefaultConfDir }}/{{ .BaseOutputDir }}/roles'
 data_bag_path '{{ .DefaultConfDir }}/{{ .BaseOutputDir }}/data_bags'
-rubygems_url 'http://nexus.query.consul/content/groups/rubygems'
 environment_path '{{ .DefaultConfDir }}/{{ .BaseOutputDir }}/environments'
 `
 
