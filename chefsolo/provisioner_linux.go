@@ -22,18 +22,19 @@ const (
 const chefService = `
 [Unit]
 Description=Run chef client each time the machine reboot
-After = network.target auditd.service
+After=network.target auditd.service
 
 [Service]
-Type=simple
+Type=oneshot
 WorkingDirectory={{ .ChefCookbookDirectory }}
 ExecStart={{ .ChefCmd }}
-ExecReload = /bin/kill -HUP $MAINPID
-SuccessExitStatus = 3
-Restart = on-failure
+SuccessExitStatus=3
+Restart=on-failure
+RestartSec=60
+RemainAfterExit=true
 
 [Install]
-WantedBy = multi-user.target
+WantedBy=multi-user.target
 `
 
 func (p *provisioner) linuxInstallChefClient(o terraform.UIOutput, comm communicator.Communicator) error {
