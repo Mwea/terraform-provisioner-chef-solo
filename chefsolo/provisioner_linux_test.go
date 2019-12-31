@@ -428,7 +428,7 @@ func TestResourceProvider_linuxInstallChefClient(t *testing.T) {
 			Commands: map[string]bool{
 				"curl -LO https://omnitruck.chef.io/install.sh": true,
 				"bash ./install.sh -v \"11.18.6\" -c stable":    true,
-				"rm -f install.sh":                              true,
+				"rm -f install.sh": true,
 			},
 		},
 	}
@@ -467,22 +467,22 @@ cookbook_path '/opt/chef/0/output/cookbooks'
 node_path '/opt/chef/0/output/nodes'
 role_path '/opt/chef/0/output/roles'
 data_bag_path '/opt/chef/0/output/data_bags'
-rubygems_url 'http://nexus.query.consul/content/groups/rubygems'
 environment_path '/opt/chef/0/output/environments'`
 
 const defaultChefService = `
 [Unit]
 Description=Run chef client each time the machine reboot
-After = network.target auditd.service
+After=network.target auditd.service
 
 [Service]
-Type=simple
+Type=oneshot
 WorkingDirectory=/opt/chef/0/output
 ExecStart=/usr/bin/chef-client -z -c /opt/chef/0/client.rb -j "/opt/chef/0/output/dna/toto.json" -E "_default"
-ExecReload = /bin/kill -HUP $MAINPID
-SuccessExitStatus = 3
-Restart = on-failure
+SuccessExitStatus=3
+Restart=on-failure
+RestartSec=60
+RemainAfterExit=true
 
 [Install]
-WantedBy = multi-user.target
+WantedBy=multi-user.target
 `
