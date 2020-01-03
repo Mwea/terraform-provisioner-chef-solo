@@ -49,7 +49,7 @@ type provisioner struct {
 func Provisioner() terraform.ResourceProvisioner {
 
 	return &schema.Provisioner{
-		Schema: map[string]*schema.Resource{
+		Schema: map[string]*schema.Schema{
 			"user_name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -65,7 +65,7 @@ func Provisioner() terraform.ResourceProvisioner {
 			},
 			"client_options": {
 				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
 			"disable_reporting": {
@@ -99,12 +99,12 @@ func Provisioner() terraform.ResourceProvisioner {
 			},
 			"no_proxy": {
 				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
 			"resources": {
 				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
 			"named_run_list": {
@@ -159,7 +159,7 @@ func Provisioner() terraform.ResourceProvisioner {
 			},
 			"nodes": {
 				Type:     schema.TypeList,
-				Elem:     &schema.Resource{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Required: true,
 			},
 			"target_node": {
