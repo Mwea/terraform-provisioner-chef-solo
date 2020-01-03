@@ -4,7 +4,7 @@ services:
 - docker
 language: go
 go:
-- 1.9.1
+- 1.13.3
 install:
 - bash scripts/gogetcookie.sh
 - go get github.com/kardianos/govendor
@@ -35,4 +35,4 @@ deploy:
   skip_cleanup: true
   file_glob: true
   on:
-    repo: Mwea/terraform-provisioner-chefsolo
+    repo: mougams/terraform-provisioner-chefsolo

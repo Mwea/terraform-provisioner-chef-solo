@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Mwea/terraform-provisioner-chefsolo/chefsolo"
+	"github.com/mougams/terraform-provisioner-chef-solo/chefsolo"
 	"github.com/hashicorp/terraform/plugin"
 )
 
