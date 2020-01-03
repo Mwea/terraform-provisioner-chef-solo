@@ -3,7 +3,7 @@ module github.com/mougams/terraform-provisioner-chef-solo
 go 1.13
 
 require (
-	github.com/mougams/terraform-provisioner-chefsolo v0.2.3
+	github.com/Mwea/terraform-provisioner-chefsolo v0.2.3
 	github.com/apparentlymart/go-cidr v1.0.1 // indirect
 	github.com/armon/circbuf v0.0.0-20190214190532-5111143e8da2
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
