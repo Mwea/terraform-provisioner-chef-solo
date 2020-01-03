@@ -35,4 +35,4 @@ deploy:
   skip_cleanup: true
   file_glob: true
   on:
-    repo: criteo-forks/terraform-provisioner-chefsolo
+    repo: mougams/terraform-provisioner-chefsolo
